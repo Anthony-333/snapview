@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://John-anthony-Oling-s-workspace-g1v55m.ap-southeast-2.xata.sh/db/snapview",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
