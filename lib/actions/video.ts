@@ -1,13 +1,15 @@
 "use server";
 
 import { headers } from "next/headers";
-import { apiFetch, getEnv, withErrorHandling } from "../util";
+import { apiFetch, getEnv, withErrorHandling } from "../utils";
 import { auth } from "../auth";
 import { BUNNY } from "@/constants";
 
 import { videos } from "@/drizzle/schema";
 import { revalidatePath } from "next/cache";
 import { db } from "@/drizzle/db";
+import aj from "../arcjet";
+import { fixedWindow, request } from "@arcjet/next";
 
 const VIDEO_STREAM_BASE_URL = BUNNY.STREAM_BASE_URL;
 const THUMBNAIL_STORAGE_BASE_URL = BUNNY.STORAGE_BASE_URL;
@@ -31,6 +33,24 @@ const revalidatePaths = async (paths: string[]) => {
   paths.forEach((path) => {
     revalidatePath(path);
   });
+};
+
+const validateWithArcjet = async (fingerprint: string) => {
+  const rateLimit = aj.withRule(
+    fixedWindow({
+      mode: "LIVE",
+      window: "1m",
+      max: 2,
+      characteristics: ["fingerprint"],
+    })
+  );
+
+  const req = await request();
+
+  const decision = await rateLimit.protect(req, { fingerprint });
+  if (decision.isDenied()) {
+    throw new Error("Rate limit exceeded. Please try again later.");
+  }
 };
 
 //Server actions
@@ -73,6 +93,8 @@ export const saveVideoDetails = withErrorHandling(
   async (videoDetails: VideoDetails) => {
     const userId = await getSessionUserId();
 
+    await validateWithArcjet(userId);
+
     await apiFetch(
       `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos/${videoDetails.videoId}`,
       {
@@ -86,11 +108,16 @@ export const saveVideoDetails = withErrorHandling(
     );
 
     await db.insert(videos).values({
-      ...videoDetails,
-      videoUrl: `${BUNNY.EMBED_URL}/${BUNNY_LIBRARY_ID}/${videoDetails.videoId}`,
       userId,
+      videoId: videoDetails.videoId,
+      title: videoDetails.title,
+      description: videoDetails.description,
+      thumbnailUrl: videoDetails.thumbnailUrl,
+      visibility: videoDetails.visibility === "public" ? "public" : "private",
+      duration: videoDetails.duration ?? null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      // Add other fields here only if they exist in your schema
     });
 
     revalidatePaths(["/"]);
