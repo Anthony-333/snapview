@@ -8,6 +8,9 @@ import { authClient } from "@/lib/auth-client";
 
 const Navbar = () => {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -30,9 +33,9 @@ const Navbar = () => {
 
         {/* Using the authClient to check auth status */}
         <figure>
-          <button onClick={() => router.push("/profile/1234")}>
+          <button onClick={() => router.push(`/profile/${user?.id}`)}>
             <Image
-              src="/assets/images/dummy.jpg"
+              src={user?.image || "/assets/images/dummy.jpg"}
               width={36}
               height={36}
               alt="useravatar"
