@@ -6,23 +6,22 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const page = async ({ params }: Params) => {
-  const { videoId } = await params;
+  const { id } = await params;
 
-  const { user, video } = await getVideoByid(videoId);
+  const videoRecord = await getVideoByid(id);
 
-  if (!video) redirect("/404");
+  if (!videoRecord?.video) redirect("/404");
 
   return (
     <main className="wrapper page">
       <VideoDetailHeader
-        {...video}
-        userImg={user?.image}
-        ownerId={video.userId}
-        username={user?.name}
-      />
-      <section className="video-details">
+        {...videoRecord.video}
+        userImg={videoRecord.user?.image}
+        ownerId={videoRecord.video.userId}
+        username={videoRecord.user?.name}
+      />      <section className="video-details">
         <div className="content">
-          <VideoPlayer videoId={video.videoId} />
+          <VideoPlayer videoId={videoRecord.video.videoId} />
         </div>
       </section>
     </main>
