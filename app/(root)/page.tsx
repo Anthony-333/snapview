@@ -1,5 +1,4 @@
 import EmptyState from "@/components/EmptyState";
-import Header from "@/components/Header";
 import Pagination from "@/components/Pagination";
 import SharedHeader from "@/components/SharedHeader";
 import VideoCard from "@/components/VideoCard";

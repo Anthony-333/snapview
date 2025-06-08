@@ -9,9 +9,7 @@ import {
   saveVideoDetails,
 } from "@/lib/actions/video";
 import { useFileInput } from "@/lib/hooks/useFileInput";
-import { get } from "http";
 import { useRouter } from "next/navigation";
-import { title } from "process";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 const uploadFileToBunny = (
@@ -33,7 +31,7 @@ const uploadFileToBunny = (
   });
 };
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [videoDuration, setVideoDuration] = useState(0);
@@ -60,7 +58,7 @@ const page = () => {
         const stored = sessionStorage.getItem("recordedVideo");
         if (!stored) return;
 
-        const { url, name, type, size, duration } = JSON.parse(stored);
+        const { url, name, type, duration } = JSON.parse(stored);
 
         const blob = await fetch(url).then((res) => res.blob());
         const file = new File([blob], name, { type, lastModified: Date.now() });
@@ -226,4 +224,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

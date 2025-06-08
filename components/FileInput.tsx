@@ -4,7 +4,6 @@ import React from "react";
 const FileInput = ({
   id,
   label,
-  accept,
   file,
   previewUrl,
   inputRef,

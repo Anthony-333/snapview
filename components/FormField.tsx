@@ -3,7 +3,6 @@ import React from "react";
 const FormField = ({
   id,
   label,
-  type = "text",
   value,
   onChange,
   placeholder,
