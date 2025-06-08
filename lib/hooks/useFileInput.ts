@@ -1,4 +1,3 @@
-import { set } from "better-auth";
 import { ChangeEvent, useRef, useState } from "react";
 
 export const useFileInput = (maxSize: number) => {
