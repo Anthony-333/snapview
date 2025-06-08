@@ -1,28 +1,47 @@
-import VideoDetailHeader from "@/components/VideoDetailHeader";
-import VideoPlayer from "@/components/VideoPlayer";
-import { getVideoByid } from "@/lib/actions/video";
 import { redirect } from "next/navigation";
 
-import React from "react";
+
+import { getTranscript, getVideoByid } from "@/lib/actions/video";
+import VideoPlayer from "@/components/VideoPlayer";
+import VideoDetailHeader from "@/components/VideoDetailHeader";
+import VideoInfo from "@/components/VideoInfo";
+
 
 const page = async ({ params }: Params) => {
-  const { id } = await params;
+  const { videoId } = await params;
 
-  const videoRecord = await getVideoByid(id);
+  const { user, video } = await getVideoByid(videoId);
+  if (!video) redirect("/404");
 
-  if (!videoRecord?.video) redirect("/404");
+  const transcript = await getTranscript(videoId);
 
   return (
     <main className="wrapper page">
       <VideoDetailHeader
-        {...videoRecord.video}
-        userImg={videoRecord.user?.image}
-        ownerId={videoRecord.video.userId}
-        username={videoRecord.user?.name}
-      />      <section className="video-details">
+        id={video.id}
+        title={video.title}
+        createdAt={video.createdAt}
+        userImg={user?.image}
+        username={user?.name}
+        videoId={video.videoId}
+        ownerId={video.userId}
+        visibility={video.visibility}
+        thumbnailUrl={video.thumbnailUrl}
+      />
+
+      <section className="video-details">
         <div className="content">
-          <VideoPlayer videoId={videoRecord.video.videoId} />
+          <VideoPlayer videoId={video.videoId} />
         </div>
+
+        <VideoInfo
+          transcript={transcript}
+          title={video.title}
+          createdAt={video.createdAt}
+          description={video.description}
+          videoId={videoId}
+          videoUrl={video.videoUrl || ""}
+        />
       </section>
     </main>
   );

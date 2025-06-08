@@ -1,11 +1,17 @@
+"use client";
+
 import { ICONS } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import DropdownList from "./DropdownList";
 import RecordScreen from "./RecordScreen";
 
 const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
+  const [selectedFilter, setSelectedFilter] = useState("Most Recent");
+  
+  const filterOptions = ["Most Recent", "Oldest First", "Most Viewed", "Least Viewed"];
+
   return (
     <header className="header">
       <section className="header-container">
@@ -54,7 +60,17 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
           />
         </div>
 
-        <DropdownList />
+        <DropdownList 
+          options={filterOptions}
+          selectedOption={selectedFilter}
+          onOptionSelect={setSelectedFilter}
+          triggerElement={
+            <button className="filter-trigger">
+              <span>{selectedFilter}</span>
+              <Image src="/assets/icons/hamburger.svg" width={16} height={16} alt="filter" />
+            </button>
+          }
+        />
       </section>
     </header>
   );
