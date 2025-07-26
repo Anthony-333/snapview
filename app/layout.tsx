@@ -22,7 +22,7 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistKarla.variable} ${satoshi.variable} font-karla antialiased`}
       >

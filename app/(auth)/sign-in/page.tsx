@@ -3,14 +3,24 @@
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const page = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSignIn = async () => {
-    return await authClient.signIn.social({
-      provider: "google",
-    });
+    try {
+      setIsLoading(true);
+      return await authClient.signIn.social({
+        provider: "google",
+      });
+    } catch (error) {
+      console.error("Sign in error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <main className="sign-in">
       <aside className="testimonial">
@@ -79,14 +89,27 @@ const page = () => {
             time!
           </p>
 
-          <button onClick={handleSignIn}>
-            <Image
-              src="/assets/icons/google.svg"
-              width={22}
-              height={22}
-              alt="google icon"
-            />
-            Sign in with Google
+          <button
+            onClick={handleSignIn}
+            disabled={isLoading}
+            className={`signin-button ${isLoading ? "loading" : ""}`}
+          >
+            {isLoading ? (
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+                <span>Signing in...</span>
+              </div>
+            ) : (
+              <>
+                <Image
+                  src="/assets/icons/google.svg"
+                  width={22}
+                  height={22}
+                  alt="google icon"
+                />
+                Sign in with Google
+              </>
+            )}
           </button>
         </section>
       </aside>
