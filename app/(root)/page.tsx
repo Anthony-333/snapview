@@ -13,6 +13,8 @@ const page = async ({ searchParams }: SearchParams) => {
     Number(page) || 1
   );
 
+  console.log(videos);
+
   return (
     <main className="wrapper page">
       <SharedHeader subHeader="Public Library" title="All Videos" />

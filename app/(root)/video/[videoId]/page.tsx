@@ -18,7 +18,7 @@ const page = async ({ params }: Params) => {
   return (
     <main className="wrapper page">
       <VideoDetailHeader
-        id={video.id}
+        id={video.videoId}
         title={video.title}
         createdAt={video.createdAt}
         userImg={user?.image}
