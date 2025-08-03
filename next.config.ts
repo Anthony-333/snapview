@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "snapview-pz.b-cdn.net",
+        hostname: "snapview-Pz.b-cdn.net",
         port: "",
         pathname: "/**",
       },
