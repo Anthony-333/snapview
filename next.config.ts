@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+       {
+        protocol: "https",
+        hostname: "snapview-pz.b-cdn.net",
+        port: "",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",

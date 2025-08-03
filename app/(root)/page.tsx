@@ -24,7 +24,7 @@ const page = async ({ searchParams }: SearchParams) => {
           {videos.map(({ video, user }) => (
             <VideoCard
               key={video.id}
-              id={video.id}
+              id={video.videoId}
               title={video.title}
               thumbnail={video.thumbnailUrl}
               createdAt={video.createdAt}
