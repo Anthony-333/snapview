@@ -1,30 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "./lib/auth";
-import { headers } from "next/headers";
-import aj from "./lib/arcjet";
-import { createMiddleware } from "@arcjet/next";
-import { detectBot, shield } from "arcjet";
 
-export async function middleware(request: NextRequest, response: NextResponse) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export async function middleware(request: NextRequest) {
+  // Check for session cookie instead of using heavy auth imports
+  const sessionCookie = request.cookies.get('better-auth.session_token');
 
-  if (!session) {
+  // List of public routes that don't require authentication
+  const publicRoutes = ['/sign-in', '/api/auth'];
+  const isPublicRoute = publicRoutes.some(route =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+
+  // Allow public routes
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
+
+  // Redirect to sign-in if no session cookie
+  if (!sessionCookie) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
   return NextResponse.next();
 }
-
-const validate = aj.withRule(shield({ mode: "LIVE" })).withRule(
-  detectBot({
-    mode: "LIVE",
-    allow: ["CATEGORY:SEARCH_ENGINE", "G00G1E_CRAWLER"],
-  })
-);
-
-export default createMiddleware(validate);
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sign-in|assets).*)"],
