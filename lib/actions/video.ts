@@ -279,7 +279,7 @@ export const updateVideoVisibility = withErrorHandling(
     await validateWithArcjet(videoId);
     await db
       .update(videos)
-      .set({ visibility, updatedAt: new Date() })
+      .set({ visibility: visibility as "public" | "private", updatedAt: new Date() })
       .where(eq(videos.videoId, videoId));
 
     revalidatePaths(["/", `/video/${videoId}`]);
