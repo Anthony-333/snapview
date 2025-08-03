@@ -4,6 +4,7 @@ import React from "react";
 const FileInput = ({
   id,
   label,
+  accept,
   file,
   previewUrl,
   inputRef,
@@ -13,12 +14,12 @@ const FileInput = ({
 }: FileInputProps) => {
   return (
     <section className="file-input">
-      <label htmlFor="{id}">{label}</label>
+      <label htmlFor={id}>{label}</label>
 
       <input
         type="file"
         id={id}
-        accept="{accept}"
+        accept={accept}
         ref={inputRef}
         hidden
         onChange={onChange}
