@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@arcjet/next', 'better-auth']
+  },
   images: {
     remotePatterns: [
       {
